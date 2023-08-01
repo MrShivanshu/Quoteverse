@@ -4,15 +4,11 @@
 @tailwind utilities;
 body {
   font-family: 'Rubik' !important;
-  background-color: black;
 }
 *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-*::-webkit-scrollbar{
-  display: none;
 }
 nav{
   box-sizing: border-box !important;
@@ -22,7 +18,7 @@ nav{
 }
 
 #navigation-icons a:hover i{
-  scale: 1.2;
+  scale: 1.1;
 }
 
 /* Loading */
@@ -33,19 +29,9 @@ nav{
 #quote-area{
   font-size: 1.2rem;
 }
-@media only screen and (max-width:1510px) {
+
+@media only screen and (max-width:770px) {
   #side-profile{
     display: none;
-  }
-  #quotes-section{
-    width: 100%;
-  }
-  #quotes-heading{
-    font-size: 6vw;
-  }
-}
-@media only screen and (max-width:450px) {
-  #quotes-heading{
-    /* font-size: 47px; */
   }
 }
