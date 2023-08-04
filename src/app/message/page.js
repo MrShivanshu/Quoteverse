@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function message() {
   return (
-    <div>Message</div>
+    <div className='text-white'>Message</div>
   )
 }

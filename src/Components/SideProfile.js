@@ -4,11 +4,12 @@ import UserIds from './UserIds'
 import Link from 'next/link';
 import Skeleton from './Skeleton';
 
-export default function SideProfile({name, image}){
+export default function SideProfile({session}){
   const [dataLoading, setDataLoading] = useState(false)
     const [allUsers, setUsers] = useState([]);
+    const [currentUser, setCurrentUser] = useState({})
 
-  const fetchPosts = async () => {
+  const fetchRelatedUsers = async () => {
     try {
       setDataLoading(true)
       const response = await fetch("/api/users/allUsers");
@@ -20,24 +21,30 @@ export default function SideProfile({name, image}){
     }
     
   };
+  const fetchCurrentUser = async () => {
+    const response = await fetch(`/api/users/getUser/${session?.user.id}`);
+    const user = await response.json();
+    setCurrentUser(user);
+  };
   useEffect(() => {
-    fetchPosts();
-  }, []);
+      fetchRelatedUsers();
+      fetchCurrentUser();
+  }, [session?.user.id]);
     
   return (
     <div className="h-screen flex flex-col justify-start gap-14 px-8 py-20  border-l-2 border-gray-700">
       {!dataLoading ? <div className='flex gap-4 items-center justify-start w-full'>
-        <img src={image} alt="d" className='h-16 w-16 rounded-full object-contain'/>
+        <img src={currentUser.image || ""} alt="d" className='h-16 w-16 rounded-full object-contain'/>
         <span>
-        <Link className='hover:underline text-2xl' href='/profile'>@{name}</Link>
-        <p className='text-gray-500 dark:text-gray-400'>sahil bishnoi</p>
+        <Link className='hover:underline text-2xl' href='/profile'>@{currentUser.username || ""}</Link>
+        <p className='text-gray-500 dark:text-gray-400'>{currentUser.given_name || currentUser.username} {currentUser.family_name || ""}</p>
         </span>
       </div> : <Skeleton type={"userId"}/>}
       <div className='flex flex-col gap-4'>
       <div className='text-xl'>People You May Know</div>
       {dataLoading ? <Skeleton type="sideProfile"/>:<>
         {allUsers.map((user)=>{
-            return <UserIds heading="People You May Know" key={user._id} name={user.username} image={user.image} userId={user._id}/>
+            return <UserIds heading="People You May Know" key={user._id} username={user.username} user_image={user.image} userId={user._id} given_name={user.given_name} family_name={user.family_name}/>
         })}</>}
       </div>
     </div>

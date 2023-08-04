@@ -32,7 +32,7 @@ export default function Home() {
         <Quotes posts={allPosts} section={"Trending"} dataLoading={dataLoading}/>
       </div>
       <div className="sm:block hidden" id='side-profile' style={{minWidth:"30%"}}>
-        <SideProfile name={session?.user.name} image={session?.user.image} userId={session?.user._id}/>
+        <SideProfile session={session}/>
       </div>
     </div>
     </>

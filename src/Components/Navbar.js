@@ -122,7 +122,7 @@ export default function Navbar() {
           </span>
         </Link>
         <Link
-          href="/postQuote"
+          href="createpost"
           className="text-xl flex items-center justify-start gap-4  "
         >
           <i className="fa-solid fa-plus text-3xl "></i>

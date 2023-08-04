@@ -1,6 +1,6 @@
 export default function PostQuote({ post, setPost, submitting, handleSubmit }) {
   return (
-    <div className="h-full w-full">
+    <div className="h-fit w-3/4">
       <form onSubmit={handleSubmit}>
         <div className="relative z-0 w-full mb-6 group">
           <input
@@ -8,6 +8,7 @@ export default function PostQuote({ post, setPost, submitting, handleSubmit }) {
             name="floating_email"
             id="floating_email"
             value={post.title}
+            maxLength={20}
             onChange={(e) => setPost({ ...post, title: e.target.value })}
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
@@ -15,9 +16,12 @@ export default function PostQuote({ post, setPost, submitting, handleSubmit }) {
           />
           <label
             htmlFor="floating_email"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-transparent focus:outline-none focus:ring-0"
+            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-transparent focus:outline-none focus:ring-0 flex justify-between w-full"
           >
-            Quote Title
+            <span>Quote Title</span>
+            <span className="sticky right-0 bottom-0">
+              Characters Left : {20 - post.title.length}
+            </span>
           </label>
         </div>
 
@@ -37,13 +41,42 @@ export default function PostQuote({ post, setPost, submitting, handleSubmit }) {
             ></textarea>
           </div>
           <div className="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
-            <button
-              type="submit"
-              disabled={submitting}
-              className="inline-flex items-center py-1 px-4 text-xl font-medium text-center text-black bg-white rounded-2xl focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-gray-300"
-            >
-              {submitting ? `uploading...` : "Share"}
-            </button>
+            {submitting ? (
+              <button
+                type="submit"
+                className="inline-flex items-center px-4 py-2 text-sm leading-6 text-white transition duration-150 ease-in-out bg-indigo-500 rounded-md shadow  hover:bg-indigo-400"
+              >
+                <svg
+                  className="w-5 h-5 mr-3 -ml-1 text-white animate-spin"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Loading...
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="inline-flex items-center px-4 py-2 text-sm leading-6 text-white bg-indigo-500 rounded-md shadow hover:bg-indigo-400"
+              >
+                <i className="fa-solid fa-share text-sm text-white mr-2"></i>
+                Share
+              </button>
+            )}
             <div className="flex pl-0 space-x-1 sm:pl-2">
               <button
                 type="button"
@@ -68,7 +101,7 @@ export default function PostQuote({ post, setPost, submitting, handleSubmit }) {
         </div>
       </form>
       <p className="ml-auto text-xs text-gray-500 dark:text-gray-400">
-        Remember, contributions to this topic should follow our{" "}
+        Remember, contributions to this topic should follow our
         <a
           href="#"
           className="text-blue-600 dark:text-blue-500 hover:underline"

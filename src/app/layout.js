@@ -3,6 +3,8 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import Navbar from "@/Components/Navbar";
 import BottomNav from "@/Components/BottomNav";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,18 +17,35 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-      <meta name="referrer" content="no-referrer" />
+        <meta name="referrer" content="no-referrer" />
       </head>
       <body className={`${inter.className}`}>
         <Provider>
           <div className="flex w-full">
-            <div className="h-screen w-36 sm:block hidden"><Navbar/></div>
-            <div className="sm:hidden block"><BottomNav/></div>
+            <div className="h-screen w-36 sm:block hidden">
+              <Navbar />
+            </div>
+            <div className="sm:hidden block">
+              <BottomNav />
+            </div>
             <div className="w-full">{children}</div>
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss={false}
+              draggable
+              pauseOnHover={false}
+              theme="colored"
+            />
           </div>
           <script
             src="https://kit.fontawesome.com/f8f9825bbd.js"
             crossOrigin="anonymous"
+            as="script"
           ></script>
         </Provider>
       </body>

@@ -6,10 +6,35 @@ const UserSchema = new Schema({
     unique: [true, 'Email already exists!'],
     required: [true, 'Email is required!'],
   },
+  given_name:{
+    type: String,
+    required: [true, 'Firstname is required!'],
+  },
+  family_name:{
+    type: String,
+    default: "",
+  },
+  about:{
+    type: String,
+    default: "",
+  },
+  followers:{
+    type: Array,
+    default: [], 
+  },
+  followings:{
+    type: Array,
+    default: [],
+  },
   username: {
     type: String,
-    required: [true, 'Username is required!'],
-    match: [/^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/, "Password invalid, it should contain 8-20 alphanumeric letters and be unique!"]
+    unique:[true, 'Username already exists!'],
+    default:undefined,
+    match: [/^[a-zA-Z\_\.]+$/, "Username invalid"]
+  },
+  password:{
+    type:String,
+    default:undefined,
   },
   image: {
     type: String,

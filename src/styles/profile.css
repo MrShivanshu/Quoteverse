@@ -1,6 +1,9 @@
 #profile-navigation{
     position: relative;
   }
+#profile-navigation div{
+  cursor: pointer;
+}
   #profile-navigation::before{
     content: '';
     height:2px;
@@ -9,7 +12,7 @@
     left: 0;
     right: 0;
     background-color: white;
-    scale: var(--width, 30%) 1;
+    scale: var(--width, 23%) 1;
     translate: var(--left, 0px);
     transition: .3s;
     transform-origin: left;
