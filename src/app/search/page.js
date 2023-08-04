@@ -40,9 +40,11 @@ export default function page() {
                 <UserIds
                   heading="People You May Know"
                   key={user._id}
-                  name={user.username}
-                  image={user.image}
+                  username={user.username}
+                  user_image={user.image}
                   userId={user._id}
+                  given_name={user.given_name}
+                  family_name={user.family_name}
                 />
               );
             })}

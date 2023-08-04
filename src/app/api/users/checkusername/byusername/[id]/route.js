@@ -11,11 +11,10 @@ export const GET = async (request, { params }) => {
       });
     } else {
       return new Response(JSON.stringify({ foundUsername: false }), {
-        status: 404,
+        status: 200,
       });
     }
   } catch (error) {
-    console.log(params.id);
     console.log(error);
     return new Response("Failed to fetch User", { status: 500 });
   }

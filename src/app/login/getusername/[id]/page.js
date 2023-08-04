@@ -1,20 +1,24 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import Loading from '../../../../Components/Loading'
-import { toast } from 'react-toastify';
+import { useEffect, useState, useRef } from "react";
+import Loading from "../../../../Components/Loading";
+import { toast } from "react-toastify";
 
-export default function page({params}) {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+export default function page({ params }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const { data: session, status } = useSession();
+  // Ref
+  const timerRef = useRef(null);
   const router = useRouter();
-  const [loading, setLoading] = useState(false)
-  
+  const [usernameExists, setUsernameExists] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
+
     try {
       const response = await fetch(
         `/api/users/setUsername/${session?.user.id}`,
@@ -38,9 +42,8 @@ export default function page({params}) {
           theme: "colored",
         });
         router.push("/");
-        setLoading(false)
-      }
-      else{
+        setLoading(false);
+      } else {
         toast.warn(`Something went wrong please try again`, {
           position: "top-right",
           autoClose: 3000,
@@ -51,16 +54,50 @@ export default function page({params}) {
           progress: undefined,
           theme: "colored",
         });
-        setLoading(false)
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const checkUsernameExists = async (username) => {
+    try {
+      const response = await fetch(
+        `/api/users/checkusername/byusername/${username}`
+      );
+      const data = await response.json()
+      if (data.foundUsername) {
+        setUsernameExists(true); // Username exist
+      } else {
+        setUsernameExists(false); // Username does not exists
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Handling username change
+  const handleUserNameChange = (e) => {
+    const newUsername = e.target.value;
+    setUsername(newUsername);
+
+    // Clear the previous timer
+    clearTimeout(timerRef.current);
+
+    if (newUsername !== "" && newUsername.length > 6) {
+      // Set a new timer to delay API call
+      timerRef.current = setTimeout(() => {
+        checkUsernameExists(newUsername);
+      }, 500); // Adjust the delay time as needed
+    } else {
+      setUsernameExists(null);
+    }
+  };
+
   useEffect(() => {
-    if((status === "unauthenticated" ) || (session?.user.id !== params.id)){
-      setLoading(true)
+    if (status === "unauthenticated" || session?.user.id !== params.id) {
+      setLoading(true);
       toast.warn(`Permission denied`, {
         position: "top-right",
         autoClose: 3000,
@@ -71,11 +108,11 @@ export default function page({params}) {
         progress: undefined,
         theme: "colored",
       });
-      router.push('/login')
+      router.push("/login");
     }
   }, [status]);
   if (status === "loading" || loading) {
-    return <Loading/>;
+    return <Loading />;
   }
   return (
     <div className="w-full h-full flex items-center justify-center absolute top-0 left-0 bg-black z-10">
@@ -86,12 +123,12 @@ export default function page({params}) {
         <h1 className="w-full text-start text-white">
           Enter Password To Continue
         </h1>
-        <div className="mb-6 w-full">
+        <div className=" w-full">
           <label
             htmlFor="username"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Username
+            Username  (must contain 5 characters)
           </label>
           <input
             type="text"
@@ -99,12 +136,24 @@ export default function page({params}) {
             value={username}
             min={5}
             max={20}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={handleUserNameChange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Choose a username"
             required
           />
-          
+          <div>
+        {usernameExists === null ? (
+              <></>
+            ): usernameExists ? (
+              <p className="text-sm mt-1 text-red-700">
+                Username already taken
+              </p>
+            ) : (
+              <p className="text-sm mt-1 text-green-700">
+                Username available
+              </p>
+            )}
+            </div>
         </div>
         <div className="mb-6 w-full">
           <label
@@ -118,18 +167,19 @@ export default function page({params}) {
             id="password"
             value={password}
             max={8}
-            onChange={(e)=>setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Choose a password"
             required
           />
         </div>
         <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Proceed
-        </button>
+                type="submit"
+                disabled={usernameExists || username === ""  || username.length < 6}
+                className={`text-white focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2  ${usernameExists || username === "" || username.length < 6 ? "bg-gray-700" : "bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 hover:bg-blue-800"}`}
+              >
+                proceed
+              </button>
       </form>
     </div>
   );

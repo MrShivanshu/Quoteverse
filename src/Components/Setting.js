@@ -6,7 +6,7 @@ export default function Setting({ handleLogOut, user, id }) {
   // States
   const [image, setImage] = useState("");
   const [currentUser, setCurrentUser] = useState(user);
-  const [usernameExists, setUsernameExists] = useState(false);
+  const [usernameExists, setUsernameExists] = useState(null);
 
   // Ref
   const timerRef = useRef(null);
@@ -28,7 +28,8 @@ export default function Setting({ handleLogOut, user, id }) {
   const checkUsernameExists = async (username) => {
     try {
       const response = await fetch(`/api/users/checkusername/byusername/${username}`);
-      if (response.status === 200) {
+      const data = await response.json()
+      if (data.foundUsername) {
         setUsernameExists(true); // Username exist
       } else {
         setUsernameExists(false); // Username does not exists
@@ -50,7 +51,10 @@ export default function Setting({ handleLogOut, user, id }) {
       // Set a new timer to delay API call
       timerRef.current = setTimeout(() => {
         checkUsernameExists(newUsername);
-      }, 1000); // Adjust the delay time as needed
+      }, 500); // Adjust the delay time as needed
+    }
+    else{
+      setUsernameExists(null);
     }
   };
 
@@ -233,9 +237,15 @@ export default function Setting({ handleLogOut, user, id }) {
                 required
               />
             </div>
-            {usernameExists && (
+            {usernameExists === null ? (
+              <></>
+            ): usernameExists ? (
               <p className="text-sm mt-1 text-red-700">
                 Username already taken
+              </p>
+            ) : (
+              <p className="text-sm mt-1 text-green-700">
+                Username available
               </p>
             )}
             <label
@@ -272,7 +282,8 @@ export default function Setting({ handleLogOut, user, id }) {
             <div className="flex gap-8 items-center justify-start">
               <button
                 type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                disabled={usernameExists || currentUser === user}
+                className={`text-white focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2  ${usernameExists || currentUser === user ? "bg-gray-700" : "bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 hover:bg-blue-800"}`}
               >
                 Save
               </button>
