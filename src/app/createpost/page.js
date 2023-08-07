@@ -20,7 +20,7 @@ export default function create() {
         method: "POST",
         body: JSON.stringify({
           quote: post.quote,
-          userId: session?.user.id,
+          userId: session?.user.id || localStorage.getItem("userId"),
           title: post.title,
         }),
       });
@@ -45,7 +45,10 @@ export default function create() {
   };
 
   useEffect(() => {
-    if (!session?.user.id || status === "unauthenticated") {
+    if (localStorage.getItem("authToken")) {
+      
+    }
+    else if (!session?.user.id || status === "unauthenticated") {
       router.push("/")
       toast.warn("Permission denied", {
         position: "top-right",

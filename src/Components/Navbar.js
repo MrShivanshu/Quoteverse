@@ -1,12 +1,10 @@
 "use client";
 import React, { useState, useRef } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 
 
 export default function Navbar() {
   const [navToggle, setNavToggle] = useState(false);
-  const {data:session} = useSession();
   const headingRef = useRef(null);
   const openStyle = {
     transition: "1s",

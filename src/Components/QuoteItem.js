@@ -72,11 +72,11 @@ export default function QuoteItem({ description, title, creator, date, id , setP
   return (
     <div className="text-white w-full min-h-full border-2 border-gray-400 sm:rounded-3xl rounded-xl flex flex-col items-center justify-between" id={id}>
       <div className="w-full flex items-center justify-between sm:h-20 h-12 border-b-2 border-gray-800 px-4">
-        <div className="w-full h-full flex items-center justify-start gap-4">
+        <div className="w-full h-full flex items-center justify-start gap-4 overflow-hidden">
           <img
             src={creator.image}
             alt="d"
-            className="sm:h-10 sm:w-10 h-8 w-8 rounded-full object-contain"
+            className="sm:h-10 sm:w-10 h-8 w-8 rounded-full object-cover "
           />
           <span className="">
             <button

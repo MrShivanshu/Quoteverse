@@ -22,14 +22,14 @@ export default function SideProfile({session}){
     
   };
   const fetchCurrentUser = async () => {
-    const response = await fetch(`/api/users/getUser/${session?.user.id}`);
+    const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem('userId')}`);
     const user = await response.json();
     setCurrentUser(user);
   };
   useEffect(() => {
       fetchRelatedUsers();
       fetchCurrentUser();
-  }, [session?.user.id]);
+  }, [session?.user.id,localStorage.getItem('userId')]);
     
   return (
     <div className="h-screen flex flex-col justify-start gap-14 px-8 py-20  border-l-2 border-gray-700">

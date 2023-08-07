@@ -11,14 +11,14 @@ export default function UserIds({username, user_image, userId, given_name, famil
           <Image
             src={user_image}
             alt="unknown"
-            className="h-10 w-10 rounded-full object-contain"
-            height={"50"}
-            width={"50"}
-            style={{height:"auto", width:"auto"}}
+            className="h-10 w-10 rounded-full object-cover"
+            height={"40"}
+            width={"40"}
+            style={{height:"50px", width:"50px"}}
           />
           <span>
-          <Link className='hover:underline' href={`/profile/${userId}?name=${username}`}>@{username}</Link>
-        <p className='text-gray-500 dark:text-gray-400'>{given_name} {family_name}</p>
+          <Link className='hover:underline text-lg' href={`/profile/${userId}?name=${username}`}>@{username}</Link>
+        <p className='text-gray-500 dark:text-gray-400 text-sm'>{given_name} {family_name}</p>
         </span>
         </li>
       </ul>

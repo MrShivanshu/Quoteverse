@@ -8,7 +8,7 @@ const UserSchema = new Schema({
   },
   given_name:{
     type: String,
-    required: [true, 'Firstname is required!'],
+    required: [true, 'FirstName is required!'],
   },
   family_name:{
     type: String,

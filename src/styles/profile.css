@@ -1,5 +1,9 @@
 #profile-navigation{
     position: relative;
+    z-index: 1;
+  }
+  #profile-navigation::selection{
+    display: none;
   }
 #profile-navigation div{
   cursor: pointer;

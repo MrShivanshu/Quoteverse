@@ -18,6 +18,7 @@ export default function page() {
 
   // Handling Logout
   const handleLogOut = () => {
+    localStorage.clear();
     toast.success(`See ya later ${user.given_name} `, {
       position: "top-right",
       autoClose: 3000,
@@ -35,17 +36,17 @@ export default function page() {
   useEffect(() => {
     // Fetching user details
     const fetchUser = async () => {
-      const response = await fetch(`/api/users/getUser/${session?.user.id}`);
+      const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem("userId")}`);
       const data = await response.json();
       setUser(data);
     };
 
     // If user is authenticated the fetch details
-    if (status === "authenticated" && session?.user.id) {
+    if (status === "authenticated" && session?.user.id || localStorage.getItem("authToken")) {
       fetchUser();
 
     // If not then go to "/"
-    } else if (status === "unauthenticated" || status === "") {
+    } else if (status === "unauthenticated" || status === "" || localStorage.getItem("authToken")) {
       router.push("/");
     }
   }, [session?.user.id, status]);
@@ -55,10 +56,10 @@ export default function page() {
     return <Loading />;
   }
   return (
-    <div className="p-10 w-full flex items-center justify-center">
+    <div className="sm:p-10 p-4 w-full flex items-center justify-center mb-16">
       <Setting
         user={user}
-        id={session?.user.id}
+        id={session?.user.id || localStorage.getItem("userId")}
         handleLogOut={handleLogOut}
       />
     </div>

@@ -30,7 +30,10 @@ export default function page({ params }) {
           }),
         }
       );
-      if (response.ok) {
+      const data = await response.json()
+      localStorage.setItem('authToken',data.authToken)  
+
+      if (response.ok && data.authToken) {
         toast.success(`Welcome ${username}`, {
           position: "top-right",
           autoClose: 3000,
@@ -80,7 +83,11 @@ export default function page({ params }) {
   // Handling username change
   const handleUserNameChange = (e) => {
     const newUsername = e.target.value;
-    setUsername(newUsername);
+    if (/[!@#$%^&*(),""''|<>?;:{}[\]+~`\/\\-]|[.]{2,}|[_]{2,}/gm.test(newUsername)) {
+      // Don't set the username
+    } else {
+      setUsername(newUsername);
+    }
 
     // Clear the previous timer
     clearTimeout(timerRef.current);

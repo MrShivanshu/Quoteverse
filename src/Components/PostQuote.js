@@ -1,6 +1,6 @@
 export default function PostQuote({ post, setPost, submitting, handleSubmit }) {
   return (
-    <div className="h-fit w-3/4">
+    <div className="h-fit sm:w-3/4 w-11/12">
       <form onSubmit={handleSubmit}>
         <div className="relative z-0 w-full mb-6 group">
           <input
@@ -8,7 +8,7 @@ export default function PostQuote({ post, setPost, submitting, handleSubmit }) {
             name="floating_email"
             id="floating_email"
             value={post.title}
-            maxLength={20}
+            maxLength={45}
             onChange={(e) => setPost({ ...post, title: e.target.value })}
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
@@ -20,7 +20,7 @@ export default function PostQuote({ post, setPost, submitting, handleSubmit }) {
           >
             <span>Quote Title</span>
             <span className="sticky right-0 bottom-0">
-              Characters Left : {20 - post.title.length}
+              Characters Left : {45 - post.title.length}
             </span>
           </label>
         </div>
@@ -58,7 +58,7 @@ export default function PostQuote({ post, setPost, submitting, handleSubmit }) {
                     cy="12"
                     r="10"
                     stroke="currentColor"
-                    stroke-width="4"
+                    strokeWidth="4"
                   ></circle>
                   <path
                     className="opacity-75"
@@ -66,7 +66,7 @@ export default function PostQuote({ post, setPost, submitting, handleSubmit }) {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                Loading...
+                Uploading...
               </button>
             ) : (
               <button

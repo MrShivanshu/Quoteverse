@@ -1,14 +1,16 @@
 "use client";
 import MainProfile from "@/Components/MainProfile";
 import { useSession } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Loading from "@/Components/Loading";
 
 export default function page({ params }) {
   const [quotes, setQuotes] = useState([]);
+  const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState({});
   const searchParams = useSearchParams();
+  const router = useRouter();
   const userName = searchParams.get("name");
   const { data: session, status } = useSession();
   useEffect(() => {
@@ -22,14 +24,16 @@ export default function page({ params }) {
       const User = await response.json();
       setCurrentUser(User);
     };
-    if (status === "authenticated" && session?.user.id) {
+    if ((status === "authenticated" && session?.user.id) || localStorage.getItem("authToken")) {
+      setLoading(true)
       fetchPosts();
       fetchUser();
-    } else if (status === "unauthenticated" || status === "") {
+      setLoading(false)
+    } else if (status === "unauthenticated" || status === "" || localStorage.getItem("authToken")) {
       router.push("/");
     }
   }, [session?.user.id, status]);
-  if (status === "loading") {
+  if (status === "loading" || loading) {
     return (
         <Loading />
     );
@@ -41,6 +45,7 @@ export default function page({ params }) {
         data={quotes}
         section={`${userName}'s`}
         setData={setQuotes}
+        loading={loading}
       />
     </div>
   );

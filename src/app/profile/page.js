@@ -1,34 +1,37 @@
 "use client";
 import MainProfile from "../../Components/MainProfile";
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Loading from "../../Components/Loading";
 
 export default function page() {
   const [quotes, setQuotes] = useState([]);
+  const [loading, setLoading] = useState(false)
   const [user, setUser] = useState({});
   const { data: session, status } = useSession();
   const router = useRouter();
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch(`/api/users/${session?.user.id}/quotes`);
+      const response = await fetch(`/api/users/${session?.user.id|| localStorage.getItem("userId")}/quotes`);
       const data = await response.json();
       setQuotes(data);
     };
     const fetchUser = async () => {
-      const response = await fetch(`/api/users/getUser/${session?.user.id}`);
+      const response = await fetch(`/api/users/getUser/${session?.user.id || localStorage.getItem("userId")}`);
       const data = await response.json();
       setUser(data);
     };
-    if (status === "authenticated" && session?.user.id) {
+    if ((status === "authenticated" && session?.user.id) || localStorage.getItem("authToken")) {
+      setLoading(true)
       fetchPosts();
       fetchUser();
-    } else if (status === "unauthenticated" || status === "") {
+      setLoading(false)
+    } else if (status === "unauthenticated" || status === "" || localStorage.getItem("authToken")) {
       router.push("/");
     }
   }, [session?.user.id, status]);
-  if (status === "loading" || !user) {
+  if (status === "loading" || !user || loading) {
     return (
       <div>
         <Loading />
@@ -42,6 +45,7 @@ export default function page() {
         section={"My"}
         data={quotes}
         setData={setQuotes}
+        loading={loading}
       />
     </div>
   );
